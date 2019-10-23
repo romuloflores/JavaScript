@@ -1,0 +1,61 @@
+Javascript 
+
+function copyRecon1() {
+   var retreivedKey = SpreadsheetApp.openById("idofthegooglesheet");
+   var pureData = retreivedKey.getSheetByName("Data");
+   var outputSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("WorksheetName");
+   var range = outputSheet.getRange(1,1,outputSheet.getLastRow(),outputSheet.getLastColumn());
+  
+   range.clear(); 
+    
+  var readData = pureData.getRange(1, 1, pureData.getLastRow(), pureData.getLastColumn()).getValues();
+ 
+  outputSheet.getRange(1, 1,readData.length, readData[0].length).setValues(readData);
+  }
+
+function copyRecon()
+{
+  copyRecon1()
+  fetchReconSheet()
+}  
+
+///////////////////////////////////////////////////////////////////////////
+
+function FetchDailysnapshot()
+{
+  var boonieTrix = SpreadsheetApp.openById("idofgooglesheet"); //Has to match the current sheet's key!// 
+  var outputTab = boonieTrix.getSheetByName("Recon"); // unique for this spreadsheet!
+  var agentsToday = outputTab.getRange(2, 1, outputTab.getLastRow()-1, 4).getValues();
+  
+  
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss1 = SpreadsheetApp.getActiveSpreadsheet();
+  var dataTab = ss.getSheetByName("Recon_Prep");
+  var dataTab1 = ss1.getSheetByName("Lists");
+  var now = dataTab1.getRange(1,1,1,1).getValues();
+  var today = now //new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  var suspectUpdatedToday = false;
+  var updateAnyway;
+     
+  // splice out 
+  for (var i=agentsToday.length-1; i>=0; i--)
+  {
+    if(agentsToday[i][0]==="WorksheetName" && agentsToday[i][0]==="WorksheetName" )
+    {agentsToday.splice(i, 1);}
+  }
+
+  
+  // add date dimension
+  for (var i=0; i<agentsToday.length; i++)
+  {agentsToday[i].unshift(today);}
+  
+  // Only write if no suspects found or user overrides
+  if(suspectUpdatedToday===false)
+  {
+    var nextBlankRow = dataTab.getLastRow()+1;
+    dataTab.getRange(nextBlankRow, 1, agentsToday.length, agentsToday[0].length).setValues(agentsToday);
+    // formatting ops
+    var dateFormat = "yyyy\"-\"mm\"-\"dd";
+    dataTab.getRange(2, 1, dataTab.getLastRow()-1, 1).setNumberFormat(dateFormat);
+  }
+}
